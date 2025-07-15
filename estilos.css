@@ -1,6 +1,6 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #fff4f4;
+  font-family: 'Quicksand', sans-serif;
+  background: linear-gradient(to bottom, #ffe6e6, #f8d7da);
   color: #333;
   text-align: center;
   margin: 0;
@@ -9,14 +9,32 @@ body {
 
 h1 {
   color: #a94442;
+  font-weight: 600;
+  margin-bottom: 40px;
 }
 
 #malla {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+.semestre {
+  border-top: 2px solid #f5c6cb;
+  padding-top: 10px;
+}
+
+.semestre h2 {
+  color: #a94442;
+  margin-bottom: 10px;
+}
+
+.ramos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
 }
 
 .ramo {
