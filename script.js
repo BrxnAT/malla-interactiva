@@ -157,4 +157,21 @@ function tieneRequisitos(ramo) {
 
 function requisitosCumplidos(ramo) {
   const requisitos = Object.entries(dependencias)
-    .filter(([, deps]) => deps.inc
+    .filter(([, deps]) => deps.includes(ramo))
+    .map(([key]) => key);
+  return requisitos.every(r => estado[r]);
+}
+
+function actualizarDesbloqueos() {
+  document.querySelectorAll(".ramo").forEach(div => {
+    const nombre = div.dataset.nombre;
+    if (!estado[nombre] && requisitosCumplidos(nombre)) {
+      div.classList.add("activo");
+    } else if (!estado[nombre] && tieneRequisitos(nombre)) {
+      div.classList.remove("activo");
+    }
+  });
+}
+
+crearMalla();
+actualizarDesbloqueos();
