@@ -1,10 +1,84 @@
-const ramos = {
-  "Introducción a la ingeniería comercial": [],
+const estructuraSemestres = {
+  "Primer semestre": [
+    "Introducción a la ingeniería comercial",
+    "Iniciación a la contabilidad",
+    "Matemática para negocios 1",
+    "Lógica y programación para negocios",
+    "Comunicación en inglés",
+    "Comunicación en español"
+  ],
+  "Segundo semestre": [
+    "Introducción a la economía",
+    "Gestión de empresas y liderazgo",
+    "Contabilidad financiera",
+    "Matemática para negocios 2",
+    "Sistemas de información para la gestión",
+    "Comunicación en inglés 2"
+  ],
+  "Tercer semestre": [
+    "Microeconomía",
+    "Gestión de personas y equipos",
+    "Gestión de costos",
+    "Estadística y probabilidad",
+    "Fundamentos filosóficos",
+    "Integración del saber"
+  ],
+  "Cuarto semestre": [
+    "Macroeconomía",
+    "Legislación para los negocios",
+    "Gestión directiva",
+    "Gestión financiera de corto plazo",
+    "Análisis de datos 1",
+    "Inglés para negocios"
+  ],
+  "Quinto semestre": [
+    "Práctica inicial",
+    "Análisis microeconómico avanzado",
+    "Dirección estratégica de marketing",
+    "Finanzas e inversiones",
+    "Econometría",
+    "Fundamentos teológicos"
+  ],
+  "Sexto semestre": [
+    "Economía de empresa",
+    "Tributación para los negocios",
+    "Marketing y creación de valor",
+    "Gestión y sostenibilidad",
+    "Finanzas corporativas",
+    "Metodología de investigación"
+  ],
+  "Séptimo semestre": [
+    "Investigación de mercado",
+    "Estrategia empresarial",
+    "Evaluación de proyectos",
+    "Gestión de operaciones",
+    "Ética profesional",
+    "Optativo de profundización"
+  ],
+  "Octavo semestre": [
+    "Gestión de la innovación",
+    "Control de gestión",
+    "Proyecto integrador",
+    "Optativo de profundización",
+    "Integración del saber"
+  ],
+  "Noveno semestre": [
+    "Innovación en productos y servicios",
+    "Negocios internacionales",
+    "Optativo de profundización",
+    "Optativo de profundización",
+    "Optativo de profundización",
+    "Optativo de profundización"
+  ],
+  "Décimo semestre": [
+    "Práctica profesional"
+  ]
+};
+
+const dependencias = {
   "Iniciación a la contabilidad": ["Contabilidad financiera", "Gestión de costos"],
   "Matemática para negocios 1": ["Matemática para negocios 2", "Introducción a la economía"],
-  "Lógica y programación para negocios": [],
   "Comunicación en inglés": ["Comunicación en inglés 2"],
-  "Comunicación en español": [],
   "Introducción a la economía": ["Microeconomía", "Macroeconomía"],
   "Gestión de empresas y liderazgo": ["Gestión de personas y equipos"],
   "Contabilidad financiera": ["Gestión financiera de corto plazo"],
@@ -13,97 +87,95 @@ const ramos = {
   "Comunicación en inglés 2": ["Inglés para negocios"],
   "Microeconomía": ["Análisis microeconómico avanzado"],
   "Gestión de personas y equipos": ["Gestión directiva"],
-  "Gestión de costos": [],
   "Estadística y probabilidad": ["Econometría"],
   "Fundamentos filosóficos": ["Fundamentos teológicos"],
-  "Integración del saber": [],
-  "Macroeconomía": [],
-  "Legislación para los negocios": [],
-  "Gestión directiva": [],
   "Gestión financiera de corto plazo": ["Finanzas e inversiones"],
-  "Análisis de datos 1": [],
-  "Inglés para negocios": [],
-  "Práctica inicial": [],
   "Análisis microeconómico avanzado": ["Economía de empresa"],
   "Dirección estratégica de marketing": ["Marketing y creación de valor"],
   "Finanzas e inversiones": ["Finanzas corporativas", "Estrategia empresarial"],
   "Econometría": ["Metodología de investigación"],
   "Fundamentos teológicos": ["Ética profesional"],
-  "Economía de empresa": [],
-  "Tributación para los negocios": [],
   "Marketing y creación de valor": ["Investigación de mercado", "Negocios internacionales"],
-  "Gestión y sostenibilidad": [],
   "Finanzas corporativas": ["Evaluación de proyectos"],
   "Metodología de investigación": ["Proyecto integrador"],
-  "Investigación de mercado": [],
   "Estrategia empresarial": ["Control de gestión", "Negocios internacionales"],
-  "Evaluación de proyectos": [],
-  "Gestión de operaciones": [],
-  "Ética profesional": [],
-  "Optativo de profundización": [],
-  "Gestión de la innovación": ["Innovación en productos y servicios"],
-  "Control de gestión": [],
-  "Proyecto integrador": [],
-  "Innovación en productos y servicios": [],
-  "Negocios internacionales": [],
-  "Práctica profesional": []
+  "Gestión de la innovación": ["Innovación en productos y servicios"]
 };
 
-const estadoRamos = {}; // guarda qué ramos están aprobados
-const mallaDiv = document.getElementById("malla");
+const estado = JSON.parse(localStorage.getItem("estadoRamos") || "{}");
 
-// Crear botones
-Object.keys(ramos).forEach(nombre => {
-  const div = document.createElement("div");
-  div.className = "ramo";
-  div.textContent = nombre;
-  div.dataset.nombre = nombre;
-  mallaDiv.appendChild(div);
-  estadoRamos[nombre] = false;
-});
-
-// Activar ramos sin requisitos
-function inicializarMalla() {
-  Object.entries(ramos).forEach(([nombre, requisitos]) => {
-    if (requisitos.length === 0) {
-      activarRamo(nombre);
-    }
-  });
+function guardarEstado() {
+  localStorage.setItem("estadoRamos", JSON.stringify(estado));
 }
 
-function activarRamo(nombre) {
-  const div = [...document.querySelectorAll(".ramo")].find(d => d.dataset.nombre === nombre);
-  if (div) {
-    div.classList.add("activo");
-  }
-}
+function crearMalla() {
+  const malla = document.getElementById("malla");
+  for (const [semestre, ramos] of Object.entries(estructuraSemestres)) {
+    const divSemestre = document.createElement("div");
+    divSemestre.className = "semestre";
 
-function aprobarRamo(nombre) {
-  if (estadoRamos[nombre]) return;
+    const titulo = document.createElement("h2");
+    titulo.textContent = semestre;
 
-  estadoRamos[nombre] = true;
-  const div = [...document.querySelectorAll(".ramo")].find(d => d.dataset.nombre === nombre);
-  if (div) {
-    div.classList.add("aprobado");
-  }
+    const contenedor = document.createElement("div");
+    contenedor.className = "ramos";
 
-  // Buscar qué ramos se desbloquean al aprobar este
-  Object.entries(ramos).forEach(([otroRamo, requisitos]) => {
-    if (requisitos.includes(nombre)) {
-      const todosAprobados = requisitos.every(req => estadoRamos[req]);
-      if (todosAprobados) {
-        activarRamo(otroRamo);
+    ramos.forEach(nombre => {
+      const div = document.createElement("div");
+      div.className = "ramo";
+      div.textContent = nombre;
+      div.dataset.nombre = nombre;
+
+      if (!tieneRequisitos(nombre) || requisitosCumplidos(nombre)) {
+        div.classList.add("activo");
       }
+
+      if (estado[nombre]) {
+        div.classList.add("aprobado");
+      }
+
+      div.addEventListener("click", () => {
+        const aprobado = estado[nombre];
+        estado[nombre] = !aprobado;
+        if (estado[nombre]) {
+          div.classList.add("aprobado");
+        } else {
+          div.classList.remove("aprobado");
+        }
+        actualizarDesbloqueos();
+        guardarEstado();
+      });
+
+      contenedor.appendChild(div);
+    });
+
+    divSemestre.appendChild(titulo);
+    divSemestre.appendChild(contenedor);
+    malla.appendChild(divSemestre);
+  }
+}
+
+function tieneRequisitos(ramo) {
+  return Object.values(dependencias).some(lista => lista.includes(ramo));
+}
+
+function requisitosCumplidos(ramo) {
+  const requisitos = Object.entries(dependencias)
+    .filter(([, deps]) => deps.includes(ramo))
+    .map(([key]) => key);
+  return requisitos.every(r => estado[r]);
+}
+
+function actualizarDesbloqueos() {
+  document.querySelectorAll(".ramo").forEach(div => {
+    const nombre = div.dataset.nombre;
+    if (!estado[nombre] && requisitosCumplidos(nombre)) {
+      div.classList.add("activo");
+    } else if (!estado[nombre] && tieneRequisitos(nombre)) {
+      div.classList.remove("activo");
     }
   });
 }
 
-document.querySelectorAll(".ramo").forEach(div => {
-  div.addEventListener("click", () => {
-    const nombre = div.dataset.nombre;
-    aprobarRamo(nombre);
-  });
-});
-
-inicializarMalla();
-
+crearMalla();
+actualizarDesbloqueos();
