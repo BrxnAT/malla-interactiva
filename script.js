@@ -1,5 +1,5 @@
 const estructuraSemestres = {
-  "Primer semestre": [
+  "1° Semestre": [
     "Introducción a la ingeniería comercial",
     "Iniciación a la contabilidad",
     "Matemática para negocios 1",
@@ -7,7 +7,7 @@ const estructuraSemestres = {
     "Comunicación en inglés",
     "Comunicación en español"
   ],
-  "Segundo semestre": [
+  "2° Semestre": [
     "Introducción a la economía",
     "Gestión de empresas y liderazgo",
     "Contabilidad financiera",
@@ -15,7 +15,7 @@ const estructuraSemestres = {
     "Sistemas de información para la gestión",
     "Comunicación en inglés 2"
   ],
-  "Tercer semestre": [
+  "3° Semestre": [
     "Microeconomía",
     "Gestión de personas y equipos",
     "Gestión de costos",
@@ -23,7 +23,7 @@ const estructuraSemestres = {
     "Fundamentos filosóficos",
     "Integración del saber"
   ],
-  "Cuarto semestre": [
+  "4° Semestre": [
     "Macroeconomía",
     "Legislación para los negocios",
     "Gestión directiva",
@@ -31,7 +31,7 @@ const estructuraSemestres = {
     "Análisis de datos 1",
     "Inglés para negocios"
   ],
-  "Quinto semestre": [
+  "5° Semestre": [
     "Práctica inicial",
     "Análisis microeconómico avanzado",
     "Dirección estratégica de marketing",
@@ -39,7 +39,7 @@ const estructuraSemestres = {
     "Econometría",
     "Fundamentos teológicos"
   ],
-  "Sexto semestre": [
+  "6° Semestre": [
     "Economía de empresa",
     "Tributación para los negocios",
     "Marketing y creación de valor",
@@ -47,7 +47,7 @@ const estructuraSemestres = {
     "Finanzas corporativas",
     "Metodología de investigación"
   ],
-  "Séptimo semestre": [
+  "7° Semestre": [
     "Investigación de mercado",
     "Estrategia empresarial",
     "Evaluación de proyectos",
@@ -55,14 +55,14 @@ const estructuraSemestres = {
     "Ética profesional",
     "Optativo de profundización"
   ],
-  "Octavo semestre": [
+  "8° Semestre": [
     "Gestión de la innovación",
     "Control de gestión",
     "Proyecto integrador",
     "Optativo de profundización",
     "Integración del saber"
   ],
-  "Noveno semestre": [
+  "9° Semestre": [
     "Innovación en productos y servicios",
     "Negocios internacionales",
     "Optativo de profundización",
@@ -70,7 +70,7 @@ const estructuraSemestres = {
     "Optativo de profundización",
     "Optativo de profundización"
   ],
-  "Décimo semestre": [
+  "10° Semestre": [
     "Práctica profesional"
   ]
 };
@@ -137,11 +137,7 @@ function crearMalla() {
       div.addEventListener("click", () => {
         const aprobado = estado[nombre];
         estado[nombre] = !aprobado;
-        if (estado[nombre]) {
-          div.classList.add("aprobado");
-        } else {
-          div.classList.remove("aprobado");
-        }
+        div.classList.toggle("aprobado", estado[nombre]);
         actualizarDesbloqueos();
         guardarEstado();
       });
@@ -161,21 +157,4 @@ function tieneRequisitos(ramo) {
 
 function requisitosCumplidos(ramo) {
   const requisitos = Object.entries(dependencias)
-    .filter(([, deps]) => deps.includes(ramo))
-    .map(([key]) => key);
-  return requisitos.every(r => estado[r]);
-}
-
-function actualizarDesbloqueos() {
-  document.querySelectorAll(".ramo").forEach(div => {
-    const nombre = div.dataset.nombre;
-    if (!estado[nombre] && requisitosCumplidos(nombre)) {
-      div.classList.add("activo");
-    } else if (!estado[nombre] && tieneRequisitos(nombre)) {
-      div.classList.remove("activo");
-    }
-  });
-}
-
-crearMalla();
-actualizarDesbloqueos();
+    .filter(([, deps]) => deps.inc
